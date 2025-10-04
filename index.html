@@ -1,0 +1,949 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Phantomsong — Creative Studio</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* Brand */
+      --darkest: #322E34;
+      --bright: #453457;
+      --light: #E1DDD4;
+      --lightest: #F8F8F8;
+
+      /* UI */
+      --text: var(--lightest);
+      --muted: #d7d1c7;
+      --shadow-1: 0 8px 24px rgba(0, 0, 0, .25);
+      --shadow-2: 0 20px 60px rgba(0, 0, 0, .35);
+      --glass: rgba(255, 255, 255, .06);
+      --border: rgba(255, 255, 255, .12);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+
+    body{
+      font-family:"Montserrat",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 10% -10%, #594375 0%, transparent 55%),
+        radial-gradient(1000px 600px at 100% 0%, #5b3f75 0%, transparent 45%),
+        var(--bright);
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+    }
+
+    /* ---- Layout helpers ---- */
+    .container{ max-width:1200px; margin:0 auto; padding:0 20px; }
+    .section{ padding:64px 0; }
+    .grid{ display:grid; gap:24px; }
+
+    .section-head{
+      display:flex; justify-content:space-between; align-items:flex-end; gap:18px; flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+    .section-head h2{
+      margin:8px 0 4px; font-size:28px; font-weight:900; letter-spacing:-.02em;
+    }
+    .section-head p{ margin:0; color:var(--muted); }
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding:12px 18px; border-radius:999px; border:1px solid transparent;
+      font-weight:800; letter-spacing:.01em; text-decoration:none; cursor:pointer;
+      transition:.18s transform ease, .18s box-shadow ease, .18s background ease, .18s border-color ease;
+    }
+    .btn:hover{ transform:translateY(-2px); }
+    .btn-primary{ background:var(--light); color:var(--darkest); box-shadow:var(--shadow-1); }
+    .btn-primary:hover{ background:#f0ece5; }
+    .btn-ghost{ background:transparent; color:var(--light); border-color:var(--border); }
+
+    .tag{
+      display:inline-block; font-size:12px; font-weight:800; letter-spacing:.08em;
+      text-transform:uppercase; padding:6px 10px; border-radius:999px;
+      background:rgba(255,255,255,.08); border:1px solid var(--border); color:var(--muted);
+    }
+
+    /* ---- Header ---- */
+    .header{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter:saturate(1.1) blur(10px);
+      background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.06));
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .nav{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; }
+    .brand{
+      display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:-.02em; font-size:22px;
+    }
+    .brand-logo{
+      width:36px; height:36px; border-radius:10px; display:grid; place-items:center;
+      background:var(--light); color:var(--darkest); font-weight:900; box-shadow:var(--shadow-1);
+    }
+    .nav-links{ display:none; gap:22px; align-items:center; }
+    .nav-links a{ color:var(--lightest); text-decoration:none; font-weight:700; opacity:.95; }
+    .nav-cta{ display:none; }
+    .menu-btn{
+      border:1px solid var(--border); background:transparent; color:var(--lightest);
+      width:42px; height:42px; border-radius:10px; display:grid; place-items:center; cursor:pointer;
+    }
+
+    /* Mobile menu */
+    .mobile-menu{
+      display:none; flex-direction:column; gap:10px; padding:12px 0 18px;
+    }
+    .mobile-menu a{ text-decoration:none; color:var(--lightest); font-weight:700; padding:10px 0; }
+
+    /* ---- Hero ---- */
+    .hero{ padding:64px 0 32px; }
+    .hero-wrap{ display:grid; gap:28px; align-items:center; grid-template-columns:1fr; }
+    .hero .copy .kicker{ margin-bottom:10px; }
+    .hero h1{
+      margin:0 0 10px; font-weight:900; letter-spacing:-.02em; line-height:1.04;
+      font-size: clamp(28px, 7vw, 54px); transform:scaleX(.985); transform-origin:left center;
+    }
+    .hero p{ margin:0 0 18px; color:var(--muted); font-weight:500; font-size:clamp(14px, 2.8vw, 18px); }
+    .hero .actions{ display:flex; gap:12px; flex-wrap:wrap; }
+    .hero .media{
+      position:relative; border-radius:var(--radius); overflow:hidden;
+      background:var(--glass); border:1px solid var(--border); box-shadow:var(--shadow-2);
+      aspect-ratio:4/3;
+    }
+    .hero .media img{ width:100%; height:100%; object-fit:cover; }
+    .hero .media::after{
+      content:""; position:absolute; inset:auto 12px 12px 12px; height:42px; border-radius:12px;
+      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+      border:1px solid var(--border);
+    }
+
+    /* ---- Trust / Experience ---- */
+    .trust{
+      display:flex; gap:18px; align-items:center; justify-content:center; flex-wrap:wrap; opacity:.9;
+    }
+    .trust img{ height:50px; opacity:.9; filter:grayscale(1) contrast(.95) brightness(.95); }
+
+    /* ---- Services ---- */
+    .services .grid{ grid-template-columns:1fr; }
+    .card{
+      background:var(--glass); border:1px solid var(--border); border-radius:18px; padding:20px;
+      box-shadow:var(--shadow-1); transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .card:hover{ transform:translateY(-4px); box-shadow:var(--shadow-2); border-color:rgba(255,255,255,.18); }
+    .card h3{ margin:10px 0 6px; font-size:20px; }
+    .card p{ margin:0; color:var(--muted); }
+
+    /* ---- Testimonials ---- */
+    .testimonials .grid{ grid-template-columns:1fr; }
+    .quote{
+      display:grid; gap:12px; background:var(--glass); border:1px solid var(--border);
+      border-radius:18px; padding:20px; box-shadow:var(--shadow-1);
+    }
+    .quote p{ margin:0; color:var(--lightest); font-size:16px; }
+    .quote .meta{ display:flex; align-items:center; gap:12px; color:var(--muted); }
+    .quote .avatar{ width:36px; height:36px; border-radius:50%; overflow:hidden; border:1px solid var(--border); }
+
+    /* ---- CTA ---- */
+    .cta{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+    }
+    .cta .wrap{ display:grid; gap:18px; grid-template-columns:1fr; align-items:center; }
+    .cta h2{ margin:0; font-weight:900; letter-spacing:-.02em; transform:scaleX(.985); }
+    .cta p{ margin:0; color:var(--muted); }
+    .cta .actions{ display:flex; gap:12px; flex-wrap:wrap; }
+
+    /* ---- Footer ---- */
+    .footer{ padding:30px 0; color:#d6d1c9; }
+    .footer .grid{ grid-template-columns:1fr; }
+    .footer a{ color:#efece6; text-decoration:none; }
+
+    /* ---- Responsive ---- */
+    @media (min-width:720px){
+      .nav-links{ display:flex; }
+      .nav-cta{ display:flex; }
+      .menu-btn{ display:none; }
+      .hero-wrap{ grid-template-columns: 1.3fr 1fr; gap:32px; }
+      .services .grid{ grid-template-columns:repeat(3, 1fr); }
+      .testimonials .grid{ grid-template-columns:repeat(3, 1fr); }
+      .cta .wrap{ grid-template-columns:1.2fr auto; }
+      .footer .grid{ grid-template-columns:1fr 1fr 1fr; }
+    }
+
+    /* === Portfolio (scoped to #portfolio) ===================================== */
+    #work{ padding:64px 0; }
+
+    #portfolio{
+      --grid-min: 160px;
+      --carousel-size: calc(var(--grid-min) * .75);
+      --focus: 0 0 0 3px color-mix(in oklab, var(--light) 35%, transparent);
+    }
+    #portfolio .wrap{ max-width:1200px; margin:38px auto; padding:0 20px; }
+
+    #portfolio h1{
+      margin:0 0 12px; font-weight:800; letter-spacing:-0.02em; line-height:1.05;
+      font-size: clamp(22px, 4vw, 34px); color: var(--lightest);
+    }
+    #portfolio p.lead{
+      margin:0 0 26px; color: color-mix(in oklab, var(--light) 70%, white 0%); font-weight:500;
+    }
+
+    /* Website Design Grid */
+    #portfolio .grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(var(--grid-min), 1fr)); gap:18px; }
+    #portfolio .card{
+      position:relative; aspect-ratio:1/1; border-radius:14px; overflow:hidden;
+      background: color-mix(in oklab, var(--darkest) 88%, black 0%);
+      border:1px solid color-mix(in oklab, var(--light) 20%, transparent);
+      display:flex; align-items:center; justify-content:center; cursor:pointer;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+      box-shadow:0 6px 20px rgba(0,0,0,.35); padding:10px;
+    }
+    #portfolio .card:hover{
+      transform:translateY(-6px) scale(1.02);
+      box-shadow:0 14px 40px rgba(0,0,0,.45);
+      border-color: color-mix(in oklab, var(--light) 35%, transparent);
+    }
+    #portfolio .card:focus-visible{ outline:none; box-shadow:0 14px 40px rgba(0,0,0,.45), var(--focus); }
+    #portfolio .thumb{
+      position:absolute; inset:0; background-size:cover; background-position:center;
+      filter: contrast(.98) brightness(.9) saturate(.98);
+    }
+    #portfolio .overlay{
+      position:relative; z-index:2; width:100%; height:100%;
+      display:flex; flex-direction:column; justify-content:flex-end; padding:12px;
+      background: linear-gradient(0deg, rgba(50,46,52,.72), transparent 46%);
+    }
+    #portfolio .title{ font-weight:800; color:var(--lightest); font-size:14px; line-height:1.1; text-shadow:0 2px 10px rgba(0,0,0,.35); }
+    #portfolio .url{ font-size:12px; color:var(--light); opacity:.95; }
+
+    /* Preview Modal */
+    #portfolio .preview{
+      position:fixed; inset:0; display:none; align-items:center; justify-content:center;
+      background:linear-gradient(180deg, rgba(50,46,52,.72), rgba(50,46,52,.88));
+      z-index:9999; padding:24px;
+    }
+    #portfolio .preview.open{ display:flex; }
+    #portfolio .panel{
+      width:95%; max-width:1100px; height:80vh; background:rgba(255,255,255,.03);
+      backdrop-filter: blur(10px) saturate(1.05); border-radius:16px; overflow:hidden; display:flex; flex-direction:column;
+      border:1px solid color-mix(in oklab, var(--light) 20%, transparent); box-shadow:0 14px 40px rgba(0,0,0,.45);
+    }
+    #portfolio .toolbar{
+      display:flex; gap:8px; padding:10px; background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      align-items:center; border-bottom:1px solid color-mix(in oklab, var(--light) 20%, transparent);
+    }
+    #portfolio .toolbar button{
+      border:0; background:rgba(255,255,255,.04); padding:8px 12px; border-radius:10px; color:var(--lightest);
+      cursor:pointer; font-weight:700; letter-spacing:.01em; transition: transform .15s ease, background .15s ease;
+    }
+    #portfolio .toolbar button#openTab{ color:var(--darkest); background:var(--light); }
+    #portfolio .toolbar button:hover{ transform:translateY(-1px); background:rgba(255,255,255,.08); }
+    #portfolio .toolbar button#openTab:hover{ background:color-mix(in oklab, var(--light) 85%, white 15%); }
+
+    #portfolio .frame-wrap{ flex:1; background:var(--darkest); }
+    #portfolio iframe.demo{ width:100%; height:100%; border:0; }
+    #portfolio .close-btn{ margin-left:auto; color:#ffd3d3; cursor:pointer; }
+
+    /* Logo Design Carousel — bigger (¾ grid), fill, arrows, mobile hint */
+    #portfolio .carousel-wrap{
+      position:relative; margin:8px 0; --mask-size:28px;
+      -webkit-mask: linear-gradient(90deg, transparent 0, #000 var(--mask-size), #000 calc(100% - var(--mask-size)), transparent 100%);
+      mask: linear-gradient(90deg, transparent 0, #000 var(--mask-size), #000 calc(100% - var(--mask-size)), transparent 100%);
+    }
+    #portfolio .carousel{
+      display:flex; gap:16px; overflow-x:auto; padding:12px 6px; scroll-snap-type:x mandatory; scrollbar-color:var(--light) transparent;
+    }
+    #portfolio .carousel::-webkit-scrollbar{ height:10px; }
+    #portfolio .carousel::-webkit-scrollbar-thumb{ background:var(--light); border-radius:6px; }
+
+    #portfolio .carousel button{
+      border:1px solid color-mix(in oklab, var(--light) 20%, transparent);
+      background: color-mix(in oklab, var(--darkest) 88%, black 0%);
+      cursor:pointer; flex:0 0 auto; width:var(--carousel-size); height:var(--carousel-size);
+      border-radius:14px; overflow:hidden; box-shadow:0 6px 20px rgba(0,0,0,.35);
+      transition: transform .2s, border-color .2s; scroll-snap-align:start; padding:0;
+    }
+    #portfolio .carousel button:hover{ transform:translateY(-2px) scale(1.02); border-color: color-mix(in oklab, var(--light) 35%, transparent); }
+    #portfolio .carousel img{ display:block; width:100%; height:100%; object-fit:cover; object-position:center; }
+
+    /* Arrows */
+    #portfolio .caro-arrow{
+      position:absolute; top:50%; translate:0 -50%; width:42px; height:42px; border-radius:50%;
+      border:1px solid var(--border); background:color-mix(in oklab, var(--darkest) 80%, transparent);
+      color:var(--lightest); display:grid; place-items:center; cursor:pointer; box-shadow:0 6px 20px rgba(0,0,0,.35);
+      transition: background .15s ease, transform .15s ease, opacity .15s ease; user-select:none;
+    }
+    #portfolio .caro-arrow:hover{ background:color-mix(in oklab, var(--darkest) 65%, transparent); transform:translateY(-1px); }
+    #portfolio .caro-arrow[disabled]{ opacity:.35; pointer-events:none; }
+    #portfolio .caro-prev{ left:-6px; }
+    #portfolio .caro-next{ right:-6px; }
+
+    /* Mobile drag hint */
+    @media (max-width:720px){
+      #portfolio{ --grid-min:140px; }
+      #portfolio .carousel-wrap::after{
+        content:"Drag to scroll →"; position:absolute; right:14px; top:-22px; font-size:12px; color:#e8e2d8; opacity:.8; font-weight:700;
+      }
+    }
+
+    /* Logo Preview Modal */
+    #portfolio .logo-preview{
+      position:fixed; inset:0; background:rgba(50,46,52,.88); display:none; align-items:center; justify-content:center; z-index:9999; padding:24px;
+    }
+    #portfolio .logo-preview.open{ display:flex; }
+    #portfolio .logo-panel{
+      display:flex; background:rgba(255,255,255,.03); border-radius:16px; overflow:hidden;
+      max-width:980px; width:95%; height:72%;
+      border:1px solid color-mix(in oklab, var(--light) 20%, transparent); box-shadow:0 14px 40px rgba(0,0,0,.45);
+      backdrop-filter: blur(10px) saturate(1.05);
+    }
+    #portfolio .logo-left{ flex:1; display:flex; align-items:center; justify-content:center; background:var(--darkest); padding:12px; }
+    #portfolio .logo-left img{ max-width:100%; max-height:100%; object-fit:contain; }
+    #portfolio .logo-right{ flex:1; display:flex; flex-direction:column; padding:18px; color:var(--text); overflow-y:auto; }
+    #portfolio .logo-right h1{ margin:0 0 6px; font-weight:800; font-size: clamp(18px, 3vw, 26px); }
+    #portfolio .logo-right p{ margin:0 0 12px; font-size:14px; color: color-mix(in oklab, var(--light) 70%, white 0%); font-weight:500; }
+    #portfolio .logo-right hr{ border:0; border-top:1px solid color-mix(in oklab, var(--light) 20%, transparent); margin:10px 0; }
+    #portfolio .logo-thumbs{ display:flex; flex-wrap:wrap; gap:8px; }
+    #portfolio .logo-thumbs img{
+      width:64px; height:64px; object-fit:cover; cursor:pointer; border-radius:8px; box-shadow:0 6px 20px rgba(0,0,0,.35);
+      border:1px solid color-mix(in oklab, var(--light) 20%, transparent); transition: transform .2s, border-color .2s;
+    }
+    #portfolio .logo-thumbs img:hover{ transform:scale(1.05); border-color: color-mix(in oklab, var(--light) 35%, transparent); }
+    #portfolio .logo-preview .close-btn{
+      position:absolute; top:20px; right:20px; background: color-mix(in oklab, var(--darkest) 88%, black 0%);
+      color:#ffd3d3; border:1px solid color-mix(in oklab, var(--light) 20%, transparent); padding:8px 12px; border-radius:10px; cursor:pointer;
+    }
+
+    /* === Consultation Modal ================================================ */
+    :root{
+      --select-arrow: url("data:image/svg+xml;utf8,\ <svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23E1DDD4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    }
+    .consult-modal{
+      position:fixed; inset:0; display:none; align-items:center; justify-content:center;
+      background:linear-gradient(180deg, rgba(50,46,52,.72), rgba(50,46,52,.88)); z-index:10010; padding:24px;
+    }
+    .consult-modal.open{ display:flex; }
+    .consult-card{
+      width:min(720px, 96vw); background:var(--glass); border:1px solid var(--border); border-radius:16px;
+      box-shadow:var(--shadow-2); backdrop-filter: blur(10px) saturate(1.05); overflow:hidden; color:var(--lightest); color-scheme:dark;
+    }
+
+    .consult-head{
+      display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid var(--border);
+    }
+    .consult-title{ margin:0; font-size:20px; font-weight:900; letter-spacing:-.02em; }
+    .consult-close{
+      border:1px solid var(--border); background:transparent; color:#ffd3d3;
+      width:40px; height:40px; border-radius:10px; display:grid; place-items:center; cursor:pointer;
+    }
+
+    .consult-body{ padding:18px; display:grid; gap:18px; }
+    .consult-grid{ display:grid; grid-template-columns:1fr; row-gap:14px; column-gap:14px; }
+    .consult-grid.cols-2{ grid-template-columns:1fr 1fr; }
+    @media (max-width:720px){ .consult-grid.cols-2{ grid-template-columns:1fr; } }
+
+    .form-field{ display:flex; flex-direction:column; gap:8px; }
+    .form-field label{ font-weight:800; font-size:13px; letter-spacing:.02em; }
+    .form-field input, .form-field select, .form-field textarea{
+      width:100%; background-color:rgba(255,255,255,.06); border:1px solid var(--border); color:var(--lightest);
+      border-radius:12px; padding:12px 14px; font-family:inherit; font-size:14px; line-height:1.3;
+      transition: box-shadow .15s ease, border-color .15s ease, background-color .15s ease;
+    }
+    .form-field select{
+      appearance:none; -webkit-appearance:none; -moz-appearance:none;
+      padding-right:44px; background-image:var(--select-arrow); background-repeat:no-repeat; background-position:right 14px center; background-size:18px; cursor:pointer;
+    }
+    .form-field select:focus{
+      outline:none; border-color: color-mix(in oklab, var(--light) 40%, transparent);
+      box-shadow:0 0 0 3px color-mix(in oklab, var(--light) 28%, transparent);
+      background-color:rgba(255,255,255,.08);
+      background-image:var(--select-arrow); background-position:right 14px center; background-repeat:no-repeat; background-size:18px;
+    }
+    .form-field select option{ background:#3a3440; color:#F8F8F8; }
+    .form-field select::-ms-expand{ display:none; }
+    .form-field small{ color:var(--muted); }
+
+    textarea{ min-height:120px; resize:vertical; }
+
+    .form-field input:focus, .form-field textarea:focus{
+      outline:none; border-color: color-mix(in oklab, var(--light) 40%, transparent);
+      box-shadow:0 0 0 3px color-mix(in oklab, var(--light) 28%, transparent);
+      background-color:rgba(255,255,255,.08);
+    }
+
+    .check{
+      display:flex; gap:12px; align-items:flex-start; background:rgba(255,255,255,.05);
+      border:1px solid var(--border); border-radius:12px; padding:12px 14px; line-height:1.35;
+    }
+    .check input{ width:auto; margin-top:2px; accent-color:var(--light); }
+
+    .consult-actions{
+      display:flex; justify-content:flex-end; gap:12px; padding:14px 18px; border-top:1px solid var(--border);
+    }
+    .btn-cancel{
+      background:transparent; color:var(--lightest); border:1px solid var(--border);
+      padding:10px 14px; border-radius:10px; font-weight:800; cursor:pointer;
+    }
+    .btn-submit{
+      background:var(--light); color:var(--darkest); border:0; padding:10px 18px; border-radius:999px; font-weight:900; cursor:pointer; box-shadow:var(--shadow-1);
+    }
+    .btn-submit:disabled{ opacity:.6; cursor:not-allowed; }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== Header / Nav ===== -->
+  <header class="header">
+    <div class="container nav">
+      <div class="brand">
+        <div class="brand-logo">Ps</div>
+        Phantomsong
+      </div>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#services">Services</a>
+        <a href="#work">Portfolio</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <div class="nav-cta">
+        <a class="btn btn-ghost" href="#work">View work</a>
+        <a class="btn btn-primary" href="#contact">Book Free</a>
+      </div>
+
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    </div>
+    <div class="container mobile-menu" id="mobileMenu" aria-hidden="true">
+      <a href="#services">Services</a>
+      <a href="#work">Portfolio</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+      <a class="btn btn-primary" href="#contact">Book Free</a>
+    </div>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="container hero-wrap">
+      <div class="copy">
+        <span class="kicker tag">Creative Studio</span>
+        <h1>We build brands &amp; websites that tell your story clearly. We don’t just create. We connect.</h1>
+        <p>From visual identity to fully-responsive websites and product visuals, we help small teams look enterprise-level without the enterprise price tag.</p>
+        <div class="actions">
+          <a href="#contact" class="btn btn-primary">Free 15-minute consultation ↗</a>
+          <a href="#work" class="btn btn-ghost">See recent projects</a>
+        </div>
+      </div>
+      <div class="media" aria-hidden="true">
+        <img src="Code.png" alt="" loading="lazy" decoding="async">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Experience / Trust bar ===== -->
+  <section class="section" id="experience">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="tag">Experience</span>
+          <h2>Companies we've worked for.</h2>
+          <p>Our founders have previously been employed by or done work for:</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-label="Trusted by">
+    <div class="container trust">
+      <img src="https://i.imgur.com/TEyAHP0.png" alt="CodeCrew" loading="lazy" decoding="async">
+      <img src="https://i.imgur.com/edpmW0L.png" alt="MoSH" loading="lazy" decoding="async">
+      <img src="https://i.imgur.com/D2rcWqm.png" alt="Persevere" loading="lazy" decoding="async">
+      <img src="https://i.imgur.com/VlNg0QW.png" alt="Unlock Potential" loading="lazy" decoding="async">
+    </div>
+  </section>
+
+  <!-- ===== Services ===== -->
+  <section class="section services" id="services">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="tag">What we do</span>
+          <h2>Design that moves people... and metrics.</h2>
+          <p>A compact, high-impact set of services for founders and small teams.</p>
+        </div>
+        <a href="#contact" class="btn btn-ghost">Get a quote</a>
+      </div>
+
+      <div class="grid" style="margin-top:24px;">
+        <article class="card">
+          <span class="tag">Web</span>
+          <h3>Responsive Websites</h3>
+          <p>Fast, accessible, SEO-ready sites with an easy CMS we configure for you—no coding required.</p>
+        </article>
+        <article class="card">
+          <span class="tag">Brand</span>
+          <h3>Identity &amp; Logo</h3>
+          <p>Distinctive logos, color systems, and brand kits for every touchpoint.</p>
+        </article>
+        <article class="card">
+          <span class="tag">Visual</span>
+          <h3>Product &amp; Promo</h3>
+          <p>Mockups, packaging, and social visuals that look crisp on any screen.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Work (Portfolio) ===== -->
+  <section class="section" id="work" aria-label="Featured work">
+    <div id="portfolio">
+      <div class="wrap">
+        <!-- Portfolio header with tag (restored) -->
+        <div class="section-head">
+          <div>
+            <span class="tag">Portfolio</span>
+            <h2>Selected work</h2>
+          </div>
+          <a href="#contact" class="btn btn-ghost">Start your project</a>
+        </div>
+
+        <h1>Web Design</h1>
+        <p class="lead">Click any square to open an interactive preview!</p>
+        <div id="grid" class="grid" aria-live="polite"></div>
+      </div>
+
+      <!-- Website Preview Modal -->
+      <div id="preview" class="preview" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="panel" role="document">
+          <div class="toolbar">
+            <button id="openTab" title="Open in new tab">↗ Open</button>
+            <button id="closePreview" class="close-btn" title="Close">✕</button>
+          </div>
+          <div class="frame-wrap">
+            <iframe id="demoFrame" class="demo" sandbox="allow-scripts allow-forms allow-pointer-lock allow-same-origin allow-popups"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logo Design Section -->
+      <div class="wrap" style="margin-top:18px;">
+        <h1>Logo Design</h1>
+        <p class="lead">Click any logo to see its design process!</p>
+
+        <div class="carousel-wrap">
+          <button class="caro-arrow caro-prev" id="caroPrev" aria-label="Scroll left">‹</button>
+          <div id="logo-carousel" class="carousel" aria-label="Logo carousel"></div>
+          <button class="caro-arrow caro-next" id="caroNext" aria-label="Scroll right">›</button>
+        </div>
+
+        <!-- Logo Preview Modal -->
+        <div id="logo-preview" class="logo-preview" aria-modal="true" aria-hidden="true">
+          <div class="logo-panel" role="document">
+            <div class="logo-left">
+              <img id="logo-main" src="" alt="Logo preview">
+            </div>
+            <div class="logo-right">
+              <h1 id="logo-title"></h1>
+              <p id="logo-client"></p>
+              <hr>
+              <div id="logo-thumbs" class="logo-thumbs"></div>
+            </div>
+          </div>
+          <button id="close-logo-preview" class="close-btn" aria-label="Close logo preview">✕</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Testimonials ===== -->
+  <section class="section testimonials" id="testimonials" aria-label="Testimonials">
+    <div class="container">
+      <span class="tag">Nice things people say</span>
+      <div class="grid" style="margin-top:18px;">
+        <blockquote class="quote">
+            <p>“I sell bead bracelets at kids’ vendor fairs. Phantomsong made me a real website, and now parents and organizers take me seriously. I look more professional than the other kids and I’m selling out faster.”</p>
+          <div class="meta">
+            <span class="avatar">
+              <img src="https://i.imgur.com/hHMhJdt.png" alt="Portrait of Jordan R." style="width:100%;height:100%;object-fit:cover;" loading="lazy" decoding="async">
+            </span>
+            <span>Samantha P. — Voidbox</span>
+          </div>
+        </blockquote>
+
+        <blockquote class="quote">
+          <p>“I was stuck on Redbubble where everything felt generic. Phantomsong moved me to my own site and built it around me, my colors, my personality, my style. Customers land on it and say, ‘This is so you,’ and know they’re in my shop, not a dime-a-dozen marketplace.”</p>
+          <div class="meta">
+            <span class="avatar">
+              <img src="https://i.imgur.com/Yng6d3Z.png" alt="Portrait of Priya M." style="width:100%;height:100%;object-fit:cover;" loading="lazy" decoding="async">
+            </span>
+            <span>Nicole K. — NK. Art</span>
+          </div>
+        </blockquote>
+
+        <blockquote class="quote">
+          <p>“Phantomsong turned my CV into a clean resume site: experience, skills, and a gallery in one link. It prints perfectly and looks like me.”</p>
+          <div class="meta">
+            <span class="avatar">
+              <img src="https://picsum.photos/80?random=33" alt="Portrait of Leo V." style="width:100%;height:100%;object-fit:cover;" loading="lazy" decoding="async">
+            </span>
+            <span>Blah B. — Blah Foods</span>
+          </div>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="section cta" id="contact">
+    <div class="container wrap">
+      <div>
+        <h2>Let’s build something people love.</h2>
+        <p>Tell us about your idea and we’ll propose a simple plan, timeline, and flat rate.</p>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn-primary" id="openConsult" aria-haspopup="dialog" aria-controls="consultModal">
+          Free 15 minute consultation
+        </button>
+
+        <a class="btn btn-ghost" href="mailto:contact@phantomsong.net">
+          contact@phantomsong.net
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Consultation Modal (overlay) ===== -->
+  <div class="consult-modal" id="consultModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="consult-card" role="document">
+      <div class="consult-head">
+        <h3 class="consult-title">Request a free 15-minute consultation</h3>
+        <button class="consult-close" id="consultClose" aria-label="Close">✕</button>
+      </div>
+      <form id="consultForm" class="consult-body" novalidate>
+        <div class="consult-grid cols-2">
+          <div class="form-field">
+            <label for="name">Your name *</label>
+            <input id="name" name="name" type="text" autocomplete="name" required>
+          </div>
+          <div class="form-field">
+            <label for="email">Email address *</label>
+            <input id="email" name="email" type="email" inputmode="email" autocomplete="email" required>
+          </div>
+        </div>
+
+        <div class="consult-grid">
+          <div class="form-field">
+            <label for="company">Company (optional)</label>
+            <input id="company" name="company" type="text" autocomplete="organization">
+          </div>
+        </div>
+
+        <div class="consult-grid cols-2">
+          <div class="form-field">
+            <label for="service">Service</label>
+            <select id="service" name="service">
+              <option value="Website design">Website design</option>
+              <option value="Brand identity">Brand identity</option>
+              <option value="Graphic design">Graphic design</option>
+              <option value="Web administrative services">Web administrative services</option>
+              <option value="Editorial Design">Editorial Design</option>
+              <option value="Other">Other</option>
+            </select>
+            <small>Need multiple services? List them in the box below.</small>
+          </div>
+          <div class="form-field" id="otherServiceField" style="display:none;">
+            <label for="otherService">Other service</label>
+            <input id="otherService" name="otherService" type="text" placeholder="Describe the service">
+          </div>
+        </div>
+
+        <div class="consult-grid">
+          <div class="form-field">
+            <label for="brief">Briefly describe what you’re looking for</label>
+            <textarea id="brief" name="brief" placeholder="A sentence or two is perfect."></textarea>
+          </div>
+        </div>
+
+        <div class="consult-grid">
+          <label class="check">
+            <input id="confirm" name="confirm" type="checkbox" required>
+            <span>
+              I understand the free consultation is <strong>15 minutes</strong>. If I want more time, I can book a follow-up for <strong>$60</strong> with an additional <strong>$22/hr</strong>.
+            </span>
+          </label>
+        </div>
+
+        <div class="consult-actions">
+          <button type="button" class="btn-cancel" id="consultCancel">Cancel</button>
+          <button type="submit" class="btn-submit" id="consultSubmit">Request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer" id="about">
+    <div class="container grid">
+      <div>
+        <div class="brand" style="margin-bottom:6px;">
+          <div class="brand-logo">Ps</div> Phantomsong
+        </div>
+        <div style="color:var(--muted)">Millington, Tennessee</div>
+      </div>
+      <div>
+        <strong>Navigate</strong><br>
+        <a href="#work">Portfolio</a> · <a href="#services">Services</a> · <a href="#testimonials">Testimonials</a> · <a href="#about">About</a>
+      </div>
+      <div>
+        <strong>Contact</strong><br>
+        <a href="mailto:contact@phantomsong.net">contact@phantomsong.net</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* Mobile menu toggle */
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuBtn?.addEventListener('click', () => {
+      const open = mobileMenu.style.display === 'flex';
+      mobileMenu.style.display = open ? 'none' : 'flex';
+      mobileMenu.setAttribute('aria-hidden', open ? 'true' : 'false');
+      menuBtn.setAttribute('aria-expanded', open ? 'false' : 'true');
+    });
+
+    /* Smooth scroll for internal links */
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const id = a.getAttribute('href');
+        if (id.length > 1) {
+          e.preventDefault();
+          document.querySelector(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          mobileMenu.style.display = 'none';
+          mobileMenu.setAttribute('aria-hidden', 'true');
+          menuBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+
+    /* === Portfolio: Web grid === */
+    (() => {
+      const sites = [
+  { title: "Voidbox", url: "https://mollyap.github.io/voidbox/" },
+  { title: "NKArt", url: "https://mollyap.github.io/NKArt/" },
+  { title: "CalderKitchen", url: "https://mollyap.github.io/calderkitchen/" },
+      ];
+
+      const grid = document.getElementById('grid');
+      const preview = document.getElementById('preview');
+      const demoFrame = document.getElementById('demoFrame');
+      const openTab = document.getElementById('openTab');
+      const closePreview = document.getElementById('closePreview');
+
+      function escapeHtml(s) {
+        return (s || '').replace(/[&<>\"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+      }
+
+      sites.forEach((s) => {
+        const card = document.createElement('button');
+        card.className = 'card';
+        card.setAttribute('aria-haspopup', 'dialog');
+        card.title = s.title + '\n' + s.url;
+
+        const thumb = document.createElement('div');
+        thumb.className = 'thumb';
+        thumb.style.backgroundImage = `url(${s.thumb || `https://image.thum.io/get/width/400/${s.url}`})`;
+
+        const overlay = document.createElement('div');
+        overlay.className = 'overlay';
+        overlay.innerHTML = `<div><div class='title'>${escapeHtml(s.title)}</div><div class='url'>${escapeHtml(s.url)}</div></div>`;
+
+        card.appendChild(thumb);
+        card.appendChild(overlay);
+        card.addEventListener('click', () => openPreview(s));
+        grid.appendChild(card);
+      });
+
+      function openPreview(site) {
+        preview.classList.add('open');
+        preview.setAttribute('aria-hidden', 'false');
+        demoFrame.src = site.url;
+        preview.dataset.currentUrl = site.url;
+        openTab.dataset.url = site.url;
+      }
+
+      function closePortfolioPreview() {
+        preview.classList.remove('open');
+        preview.setAttribute('aria-hidden', 'true');
+        demoFrame.src = 'about:blank';
+      }
+
+      closePreview.addEventListener('click', closePortfolioPreview);
+      preview.addEventListener('click', (ev) => { if (ev.target === preview) closePortfolioPreview(); });
+      openTab.addEventListener('click', () => { const u = preview.dataset.currentUrl; window.open(u, '_blank'); });
+
+      // close with ESC (also close logo modal if open)
+      window.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closePortfolioPreview(); closeLogo(); } });
+    })();
+
+    /* === Portfolio: Logo carousel (bigger items + arrows + drag hint) === */
+    (() => {
+      const logos = [
+        { title: "Byte Sized Courses", client: "For CodeCrew", icon: "https://i.imgur.com/wm9eTdR.png", images: ["https://i.imgur.com/GCkSiUk.png"] },
+        { title: "Beta Studio", client: "For Beta Studio", icon: "https://imgur.com/Yng6d3Z.png", images: ["logos/beta_1.png", "logos/beta_2.png", "logos/beta_3.png"] }
+      ];
+
+      const carousel = document.getElementById("logo-carousel");
+      const logoPreview = document.getElementById("logo-preview");
+      const logoMain = document.getElementById("logo-main");
+      const logoTitle = document.getElementById("logo-title");
+      const logoClient = document.getElementById("logo-client");
+      const logoThumbs = document.getElementById("logo-thumbs");
+      const closeLogoPreview = document.getElementById("close-logo-preview");
+
+      logos.forEach((logo, i) => {
+        const btn = document.createElement("button");
+        const img = document.createElement("img");
+        img.src = logo.icon; img.alt = logo.title;
+        btn.appendChild(img);
+        btn.addEventListener("click", () => openLogo(i));
+        carousel.appendChild(btn);
+      });
+
+      function openLogo(index) {
+        const logo = logos[index];
+        const stack = [logo.icon, ...(logo.images || [])].filter((src, i, arr) => arr.indexOf(src) === i);
+
+        logoMain.src = stack[0];
+        logoTitle.textContent = logo.title;
+        logoClient.textContent = logo.client;
+
+        logoThumbs.innerHTML = "";
+        stack.forEach(src => {
+          const thumb = document.createElement("img");
+          thumb.src = src;
+          thumb.alt = logo.title + " option";
+          thumb.addEventListener("click", () => { logoMain.src = src; });
+          logoThumbs.appendChild(thumb);
+        });
+
+        logoPreview.classList.add("open");
+        logoPreview.setAttribute('aria-hidden', 'false');
+      }
+
+      function closeLogo() {
+        logoPreview.classList.remove("open");
+        logoPreview.setAttribute('aria-hidden', 'true');
+      }
+      window.closeLogo = closeLogo;
+
+      closeLogoPreview.addEventListener("click", closeLogo);
+      logoPreview.addEventListener("click", ev => { if (ev.target === logoPreview) closeLogo(); });
+
+      // Arrow controls (show only if overflow)
+      const prevBtn = document.getElementById('caroPrev');
+      const nextBtn = document.getElementById('caroNext');
+
+      function updateArrowState() {
+        const overflow = carousel.scrollWidth > carousel.clientWidth + 4;
+        prevBtn.style.display = nextBtn.style.display = overflow ? 'grid' : 'none';
+
+        const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth - 1;
+        prevBtn.toggleAttribute('disabled', carousel.scrollLeft <= 0);
+        nextBtn.toggleAttribute('disabled', carousel.scrollLeft >= maxScrollLeft);
+      }
+      function scrollByAmount(dir) {
+        const amount = Math.max(1, Math.floor(carousel.clientWidth * 0.9));
+        carousel.scrollBy({ left: dir * amount, behavior: 'smooth' });
+      }
+      prevBtn.addEventListener('click', () => scrollByAmount(-1));
+      nextBtn.addEventListener('click', () => scrollByAmount(1));
+      carousel.addEventListener('scroll', updateArrowState);
+      window.addEventListener('resize', updateArrowState);
+      window.addEventListener('load', updateArrowState);
+      setTimeout(updateArrowState, 0);
+    })();
+
+    /* === Consultation Modal logic === */
+    (() => {
+      const modal = document.getElementById('consultModal');
+      const openBtn = document.getElementById('openConsult');
+      const closeBtn = document.getElementById('consultClose');
+      const cancelBtn = document.getElementById('consultCancel');
+      const form = document.getElementById('consultForm');
+      const service = document.getElementById('service');
+      const otherFieldWrap = document.getElementById('otherServiceField');
+      const otherInput = document.getElementById('otherService');
+      let lastFocused = null;
+
+      function openModal() {
+        lastFocused = document.activeElement;
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.getElementById('name').focus();
+      }
+      function closeModal() {
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        if (lastFocused) lastFocused.focus();
+      }
+
+      openBtn.addEventListener('click', openModal);
+      closeBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+      window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+      service.addEventListener('change', () => {
+        const isOther = service.value === 'Other';
+        otherFieldWrap.style.display = isOther ? 'block' : 'none';
+        if (!isOther) { otherInput.value = ''; }
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!form.reportValidity()) return;
+
+        if (service.value === 'Other' && !otherInput.value.trim()) {
+          otherInput.focus();
+          otherInput.setCustomValidity('Please specify the service.');
+          otherInput.reportValidity();
+          otherInput.addEventListener('input', () => otherInput.setCustomValidity(''), { once: true });
+          return;
+        }
+
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const company = document.getElementById('company').value.trim();
+        const selectedService = service.value === 'Other' ? otherInput.value.trim() : service.value;
+        const brief = document.getElementById('brief').value.trim();
+
+        const subject = `Consultation request: ${name}`;
+        const lines = [
+          `Name: ${name}`,
+          `Email: ${email}`,
+          company ? `Company: ${company}` : null,
+          `Service: ${selectedService}`,
+          brief ? `Brief: ${brief}` : null,
+          `Confirmed 15-min policy: Yes`
+        ].filter(Boolean);
+
+        const body = lines.join('\n');
+        const mailto = `mailto:contact@phantomsong.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        window.location.href = mailto;
+        closeModal();
+      });
+    })();
+  </script>
+</body>
+</html>
