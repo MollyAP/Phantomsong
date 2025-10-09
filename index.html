@@ -6,408 +6,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Phantomsong — Creative Studio</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      /* Brand */
-      --darkest: #322E34;
-      --bright: #453457;
-      --light: #E1DDD4;
-      --lightest: #F8F8F8;
-
-      /* UI */
-      --text: var(--lightest);
-      --muted: #d7d1c7;
-      --shadow-1: 0 8px 24px rgba(0, 0, 0, .25);
-      --shadow-2: 0 20px 60px rgba(0, 0, 0, .35);
-      --glass: rgba(255, 255, 255, .06);
-      --border: rgba(255, 255, 255, .12);
-      --radius: 16px;
-    }
-
-    * { box-sizing: border-box; }
-    html, body { margin: 0; }
-
-    body{
-      font-family:"Montserrat",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(1200px 700px at 10% -10%, #594375 0%, transparent 55%),
-        radial-gradient(1000px 600px at 100% 0%, #5b3f75 0%, transparent 45%),
-        var(--bright);
-      -webkit-font-smoothing:antialiased;
-      text-rendering:optimizeLegibility;
-    }
-
-    /* ---- Layout helpers ---- */
-    .container{ max-width:1200px; margin:0 auto; padding:0 20px; }
-    .section{ padding:64px 0; }
-    .grid{ display:grid; gap:24px; }
-
-    .section-head{
-      display:flex; justify-content:space-between; align-items:flex-end; gap:18px; flex-wrap:wrap;
-      margin-bottom:18px;
-    }
-    .section-head h2{
-      margin:8px 0 4px; font-size:28px; font-weight:900; letter-spacing:-.02em;
-    }
-    .section-head p{ margin:0; color:var(--muted); }
-
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center; gap:10px;
-      padding:12px 18px; border-radius:999px; border:1px solid transparent;
-      font-weight:800; letter-spacing:.01em; text-decoration:none; cursor:pointer;
-      transition:.18s transform ease, .18s box-shadow ease, .18s background ease, .18s border-color ease;
-    }
-    .btn:hover{ transform:translateY(-2px); }
-    .btn-primary{ background:var(--light); color:var(--darkest); box-shadow:var(--shadow-1); }
-    .btn-primary:hover{ background:#f0ece5; }
-    .btn-ghost{ background:transparent; color:var(--light); border-color:var(--border); }
-
-    .tag{
-      display:inline-block; font-size:12px; font-weight:800; letter-spacing:.08em;
-      text-transform:uppercase; padding:6px 10px; border-radius:999px;
-      background:rgba(255,255,255,.08); border:1px solid var(--border); color:var(--muted);
-    }
-
-    /* ---- Header ---- */
-    .header{
-      position:sticky; top:0; z-index:50;
-      backdrop-filter:saturate(1.1) blur(10px);
-      background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.06));
-      border-bottom:1px solid rgba(255,255,255,.08);
-    }
-    .nav{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; }
-    .brand{
-      display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:-.02em; font-size:22px;
-    }
-    .brand-logo{
-      width:36px; height:36px; border-radius:10px; display:grid; place-items:center;
-      background:var(--light); color:var(--darkest); font-weight:900; box-shadow:var(--shadow-1);
-    }
-    .nav-links{ display:none; gap:22px; align-items:center; }
-    .nav-links a{ color:var(--lightest); text-decoration:none; font-weight:700; opacity:.95; }
-    .nav-cta{ display:none; }
-    .menu-btn{
-      border:1px solid var(--border); background:transparent; color:var(--lightest);
-      width:42px; height:42px; border-radius:10px; display:grid; place-items:center; cursor:pointer;
-    }
-
-    /* Mobile menu */
-    .mobile-menu{
-      display:none; flex-direction:column; gap:10px; padding:12px 0 18px;
-    }
-    .mobile-menu a{ text-decoration:none; color:var(--lightest); font-weight:700; padding:10px 0; }
-
-    /* ---- Hero ---- */
-    .hero{ padding:64px 0 32px; }
-    .hero-wrap{ display:grid; gap:28px; align-items:center; grid-template-columns:1fr; }
-    .hero .copy .kicker{ margin-bottom:10px; }
-    .hero h1{
-      margin:0 0 10px; font-weight:900; letter-spacing:-.02em; line-height:1.04;
-      font-size: clamp(28px, 7vw, 54px); transform:scaleX(.985); transform-origin:left center;
-    }
-    .hero p{ margin:0 0 18px; color:var(--muted); font-weight:500; font-size:clamp(14px, 2.8vw, 18px); }
-    .hero .actions{ display:flex; gap:12px; flex-wrap:wrap; }
-    .hero .media{
-      position:relative; border-radius:var(--radius); overflow:hidden;
-      background:var(--glass); border:1px solid var(--border); box-shadow:var(--shadow-2);
-      aspect-ratio:4/3;
-    }
-    .hero .media img{ width:100%; height:100%; object-fit:cover; }
-    .hero .media::after{
-      content:""; position:absolute; inset:auto 12px 12px 12px; height:42px; border-radius:12px;
-      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
-      border:1px solid var(--border);
-    }
-
-    /* ---- Trust / Experience ---- */
-    .trust{
-      display:flex; gap:18px; align-items:center; justify-content:center; flex-wrap:wrap; opacity:.9;
-    }
-    .trust img{ height:50px; opacity:.9; filter:grayscale(1) contrast(.95) brightness(.95); }
-
-    /* ---- Services ---- */
-    .services .grid{ grid-template-columns:1fr; }
-    .card{
-      background:var(--glass); border:1px solid var(--border); border-radius:18px; padding:20px;
-      box-shadow:var(--shadow-1); transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-    }
-    .card:hover{ transform:translateY(-4px); box-shadow:var(--shadow-2); border-color:rgba(255,255,255,.18); }
-    .card h3{ margin:10px 0 6px; font-size:20px; }
-    .card p{ margin:0; color:var(--muted); }
-
-    /* ---- Testimonials ---- */
-    .testimonials .grid{ grid-template-columns:1fr; }
-    .quote{
-      display:grid; gap:12px; background:var(--glass); border:1px solid var(--border);
-      border-radius:18px; padding:20px; box-shadow:var(--shadow-1);
-    }
-    .quote p{ margin:0; color:var(--lightest); font-size:16px; }
-    .quote .meta{ display:flex; align-items:center; gap:12px; color:var(--muted); }
-    .quote .avatar{ width:36px; height:36px; border-radius:50%; overflow:hidden; border:1px solid var(--border); }
-
-    /* ---- CTA ---- */
-    .cta{
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-      border-top:1px solid var(--border); border-bottom:1px solid var(--border);
-    }
-    .cta .wrap{ display:grid; gap:18px; grid-template-columns:1fr; align-items:center; }
-    .cta h2{ margin:0; font-weight:900; letter-spacing:-.02em; transform:scaleX(.985); }
-    .cta p{ margin:0; color:var(--muted); }
-    .cta .actions{ display:flex; gap:12px; flex-wrap:wrap; }
-
-    /* ---- Footer ---- */
-    .footer{ padding:30px 0; color:#d6d1c9; }
-    .footer .grid{ grid-template-columns:1fr; }
-    .footer a{ color:#efece6; text-decoration:none; }
-
-    /* ---- Responsive ---- */
-    @media (min-width:720px){
-      .nav-links{ display:flex; }
-      .nav-cta{ display:flex; }
-      .menu-btn{ display:none; }
-      .hero-wrap{ grid-template-columns: 1.3fr 1fr; gap:32px; }
-      .services .grid{ grid-template-columns:repeat(3, 1fr); }
-      .testimonials .grid{ grid-template-columns:repeat(3, 1fr); }
-      .cta .wrap{ grid-template-columns:1.2fr auto; }
-      .footer .grid{ grid-template-columns:1fr 1fr 1fr; }
-    }
-
-    /* === Portfolio (scoped to #portfolio) ===================================== */
-    #work{ padding:64px 0; }
-
-    #portfolio{
-      --grid-min: 160px;
-      --carousel-size: calc(var(--grid-min) * .75);
-      --focus: 0 0 0 3px color-mix(in oklab, var(--light) 35%, transparent);
-    }
-    #portfolio .wrap{ max-width:1200px; margin:38px auto; padding:0 20px; }
-
-    #portfolio h1{
-      margin:0 0 12px; font-weight:800; letter-spacing:-0.02em; line-height:1.05;
-      font-size: clamp(22px, 4vw, 34px); color: var(--lightest);
-    }
-    #portfolio p.lead{
-      margin:0 0 26px; color: color-mix(in oklab, var(--light) 70%, white 0%); font-weight:500;
-    }
-
-    /* Website Design Grid */
-    #portfolio .grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(var(--grid-min), 1fr)); gap:18px; }
-    #portfolio .card{
-      position:relative; aspect-ratio:1/1; border-radius:14px; overflow:hidden;
-      background: color-mix(in oklab, var(--darkest) 88%, black 0%);
-      border:1px solid color-mix(in oklab, var(--light) 20%, transparent);
-      display:flex; align-items:center; justify-content:center; cursor:pointer;
-      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-      box-shadow:0 6px 20px rgba(0,0,0,.35); padding:10px;
-    }
-    #portfolio .card:hover{
-      transform:translateY(-6px) scale(1.02);
-      box-shadow:0 14px 40px rgba(0,0,0,.45);
-      border-color: color-mix(in oklab, var(--light) 35%, transparent);
-    }
-    #portfolio .card:focus-visible{ outline:none; box-shadow:0 14px 40px rgba(0,0,0,.45), var(--focus); }
-    #portfolio .thumb{
-      position:absolute; inset:0; background-size:cover; background-position:center;
-      filter: contrast(.98) brightness(.9) saturate(.98);
-    }
-    #portfolio .overlay{
-      position:relative; z-index:2; width:100%; height:100%;
-      display:flex; flex-direction:column; justify-content:flex-end; padding:12px;
-      background: linear-gradient(0deg, rgba(50,46,52,.72), transparent 46%);
-    }
-    #portfolio .title{ font-weight:800; color:var(--lightest); font-size:14px; line-height:1.1; text-shadow:0 2px 10px rgba(0,0,0,.35); }
-    #portfolio .url{ font-size:12px; color:var(--light); opacity:.95; }
-
-    /* Preview Modal */
-    #portfolio .preview{
-      position:fixed; inset:0; display:none; align-items:center; justify-content:center;
-      background:linear-gradient(180deg, rgba(50,46,52,.72), rgba(50,46,52,.88));
-      z-index:9999; padding:24px;
-    }
-    #portfolio .preview.open{ display:flex; }
-    #portfolio .panel{
-      width:95%; max-width:1100px; height:80vh; background:rgba(255,255,255,.03);
-      backdrop-filter: blur(10px) saturate(1.05); border-radius:16px; overflow:hidden; display:flex; flex-direction:column;
-      border:1px solid color-mix(in oklab, var(--light) 20%, transparent); box-shadow:0 14px 40px rgba(0,0,0,.45);
-    }
-    #portfolio .toolbar{
-      display:flex; gap:8px; padding:10px; background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      align-items:center; border-bottom:1px solid color-mix(in oklab, var(--light) 20%, transparent);
-    }
-    #portfolio .toolbar button{
-      border:0; background:rgba(255,255,255,.04); padding:8px 12px; border-radius:10px; color:var(--lightest);
-      cursor:pointer; font-weight:700; letter-spacing:.01em; transition: transform .15s ease, background .15s ease;
-    }
-    #portfolio .toolbar button#openTab{ color:var(--darkest); background:var(--light); }
-    #portfolio .toolbar button:hover{ transform:translateY(-1px); background:rgba(255,255,255,.08); }
-    #portfolio .toolbar button#openTab:hover{ background:color-mix(in oklab, var(--light) 85%, white 15%); }
-
-    #portfolio .frame-wrap{ flex:1; background:var(--darkest); }
-    #portfolio iframe.demo{ width:100%; height:100%; border:0; }
-    #portfolio .close-btn{ margin-left:auto; color:#ffd3d3; cursor:pointer; }
-
-    /* Logo Design Carousel — bigger (¾ grid), fill, arrows, mobile hint */
-    #portfolio .carousel-wrap{
-      position:relative; margin:8px 0; --mask-size:28px;
-      -webkit-mask: linear-gradient(90deg, transparent 0, #000 var(--mask-size), #000 calc(100% - var(--mask-size)), transparent 100%);
-      mask: linear-gradient(90deg, transparent 0, #000 var(--mask-size), #000 calc(100% - var(--mask-size)), transparent 100%);
-    }
-    #portfolio .carousel{
-      display:flex; gap:16px; overflow-x:auto; padding:12px 6px; scroll-snap-type:x mandatory; scrollbar-color:var(--light) transparent;
-    }
-    #portfolio .carousel::-webkit-scrollbar{ height:10px; }
-    #portfolio .carousel::-webkit-scrollbar-thumb{ background:var(--light); border-radius:6px; }
-
-    #portfolio .carousel button{
-      border:1px solid color-mix(in oklab, var(--light) 20%, transparent);
-      background: color-mix(in oklab, var(--darkest) 88%, black 0%);
-      cursor:pointer; flex:0 0 auto; width:var(--carousel-size); height:var(--carousel-size);
-      border-radius:14px; overflow:hidden; box-shadow:0 6px 20px rgba(0,0,0,.35);
-      transition: transform .2s, border-color .2s; scroll-snap-align:start; padding:0;
-    }
-    #portfolio .carousel button:hover{ transform:translateY(-2px) scale(1.02); border-color: color-mix(in oklab, var(--light) 35%, transparent); }
-    #portfolio .carousel img{ display:block; width:100%; height:100%; object-fit:cover; object-position:center; }
-
-    /* Arrows */
-    #portfolio .caro-arrow{
-      position:absolute; top:50%; translate:0 -50%; width:42px; height:42px; border-radius:50%;
-      border:1px solid var(--border); background:color-mix(in oklab, var(--darkest) 80%, transparent);
-      color:var(--lightest); display:grid; place-items:center; cursor:pointer; box-shadow:0 6px 20px rgba(0,0,0,.35);
-      transition: background .15s ease, transform .15s ease, opacity .15s ease; user-select:none;
-    }
-    #portfolio .caro-arrow:hover{ background:color-mix(in oklab, var(--darkest) 65%, transparent); transform:translateY(-1px); }
-    #portfolio .caro-arrow[disabled]{ opacity:.35; pointer-events:none; }
-    #portfolio .caro-prev{ left:-6px; }
-    #portfolio .caro-next{ right:-6px; }
-
-    /* Mobile drag hint */
-    @media (max-width:720px){
-      #portfolio{ --grid-min:140px; }
-      #portfolio .carousel-wrap::after{
-        content:"Drag to scroll →"; position:absolute; right:14px; top:-22px; font-size:12px; color:#e8e2d8; opacity:.8; font-weight:700;
-      }
-    }
-
-    /* Logo Preview Modal */
-    #portfolio .logo-preview{
-      position:fixed; inset:0; background:rgba(50,46,52,.88); display:none; align-items:center; justify-content:center; z-index:9999; padding:24px;
-    }
-    #portfolio .logo-preview.open{ display:flex; }
-    #portfolio .logo-panel{
-      display:flex; background:rgba(255,255,255,.03); border-radius:16px; overflow:hidden;
-      max-width:980px; width:95%; height:72%;
-      border:1px solid color-mix(in oklab, var(--light) 20%, transparent); box-shadow:0 14px 40px rgba(0,0,0,.45);
-      backdrop-filter: blur(10px) saturate(1.05);
-    }
-    #portfolio .logo-left{ flex:1; display:flex; align-items:center; justify-content:center; background:var(--darkest); padding:12px; }
-    #portfolio .logo-left img{ max-width:100%; max-height:100%; object-fit:contain; }
-    #portfolio .logo-right{ flex:1; display:flex; flex-direction:column; padding:18px; color:var(--text); overflow-y:auto; }
-    #portfolio .logo-right h1{ margin:0 0 6px; font-weight:800; font-size: clamp(18px, 3vw, 26px); }
-    #portfolio .logo-right p{ margin:0 0 12px; font-size:14px; color: color-mix(in oklab, var(--light) 70%, white 0%); font-weight:500; }
-    #portfolio .logo-right hr{ border:0; border-top:1px solid color-mix(in oklab, var(--light) 20%, transparent); margin:10px 0; }
-    #portfolio .logo-thumbs{ display:flex; flex-wrap:wrap; gap:8px; }
-    #portfolio .logo-thumbs img{
-      width:64px; height:64px; object-fit:cover; cursor:pointer; border-radius:8px; box-shadow:0 6px 20px rgba(0,0,0,.35);
-      border:1px solid color-mix(in oklab, var(--light) 20%, transparent); transition: transform .2s, border-color .2s;
-    }
-    #portfolio .logo-thumbs img:hover{ transform:scale(1.05); border-color: color-mix(in oklab, var(--light) 35%, transparent); }
-    #portfolio .logo-preview .close-btn{
-      position:absolute; top:20px; right:20px; background: color-mix(in oklab, var(--darkest) 88%, black 0%);
-      color:#ffd3d3; border:1px solid color-mix(in oklab, var(--light) 20%, transparent); padding:8px 12px; border-radius:10px; cursor:pointer;
-    }
-
-    /* === Consultation Modal ================================================ */
-    :root{
-      --select-arrow: url("data:image/svg+xml;utf8,\ <svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23E1DDD4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-    }
-    .consult-modal{
-      position:fixed; inset:0; display:none; align-items:center; justify-content:center;
-      background:linear-gradient(180deg, rgba(50,46,52,.72), rgba(50,46,52,.88)); z-index:10010; padding:24px;
-    }
-    .consult-modal.open{ display:flex; }
-    .consult-card{
-      width:min(720px, 96vw); background:var(--glass); border:1px solid var(--border); border-radius:16px;
-      box-shadow:var(--shadow-2); backdrop-filter: blur(10px) saturate(1.05); overflow:hidden; color:var(--lightest); color-scheme:dark;
-    }
-
-    .consult-head{
-      display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid var(--border);
-    }
-    .consult-title{ margin:0; font-size:20px; font-weight:900; letter-spacing:-.02em; }
-    .consult-close{
-      border:1px solid var(--border); background:transparent; color:#ffd3d3;
-      width:40px; height:40px; border-radius:10px; display:grid; place-items:center; cursor:pointer;
-    }
-
-    .consult-body{ padding:18px; display:grid; gap:18px; }
-    .consult-grid{ display:grid; grid-template-columns:1fr; row-gap:14px; column-gap:14px; }
-    .consult-grid.cols-2{ grid-template-columns:1fr 1fr; }
-    @media (max-width:720px){ .consult-grid.cols-2{ grid-template-columns:1fr; } }
-
-    .form-field{ display:flex; flex-direction:column; gap:8px; }
-    .form-field label{ font-weight:800; font-size:13px; letter-spacing:.02em; }
-    .form-field input, .form-field select, .form-field textarea{
-      width:100%; background-color:rgba(255,255,255,.06); border:1px solid var(--border); color:var(--lightest);
-      border-radius:12px; padding:12px 14px; font-family:inherit; font-size:14px; line-height:1.3;
-      transition: box-shadow .15s ease, border-color .15s ease, background-color .15s ease;
-    }
-    .form-field select{
-      appearance:none; -webkit-appearance:none; -moz-appearance:none;
-      padding-right:44px; background-image:var(--select-arrow); background-repeat:no-repeat; background-position:right 14px center; background-size:18px; cursor:pointer;
-    }
-    .form-field select:focus{
-      outline:none; border-color: color-mix(in oklab, var(--light) 40%, transparent);
-      box-shadow:0 0 0 3px color-mix(in oklab, var(--light) 28%, transparent);
-      background-color:rgba(255,255,255,.08);
-      background-image:var(--select-arrow); background-position:right 14px center; background-repeat:no-repeat; background-size:18px;
-    }
-    .form-field select option{ background:#3a3440; color:#F8F8F8; }
-    .form-field select::-ms-expand{ display:none; }
-    .form-field small{ color:var(--muted); }
-
-    textarea{ min-height:120px; resize:vertical; }
-
-    .form-field input:focus, .form-field textarea:focus{
-      outline:none; border-color: color-mix(in oklab, var(--light) 40%, transparent);
-      box-shadow:0 0 0 3px color-mix(in oklab, var(--light) 28%, transparent);
-      background-color:rgba(255,255,255,.08);
-    }
-
-    .check{
-      display:flex; gap:12px; align-items:flex-start; background:rgba(255,255,255,.05);
-      border:1px solid var(--border); border-radius:12px; padding:12px 14px; line-height:1.35;
-    }
-    .check input{ width:auto; margin-top:2px; accent-color:var(--light); }
-
-    .consult-actions{
-      display:flex; justify-content:flex-end; gap:12px; padding:14px 18px; border-top:1px solid var(--border);
-    }
-    .btn-cancel{
-      background:transparent; color:var(--lightest); border:1px solid var(--border);
-      padding:10px 14px; border-radius:10px; font-weight:800; cursor:pointer;
-    }
-    .btn-submit{
-      background:var(--light); color:var(--darkest); border:0; padding:10px 18px; border-radius:999px; font-weight:900; cursor:pointer; box-shadow:var(--shadow-1);
-    }
-    .btn-submit:disabled{ opacity:.6; cursor:not-allowed; }
-
-    /* Reduced motion */
-    @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap"
+    rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    referrerpolicy="no-referrer">
 </head>
 
 <body>
-
-  <!-- ===== Header / Nav ===== -->
+  <!-- ===== Header ===== -->
   <header class="header">
     <div class="container nav">
-      <div class="brand">
-        <div class="brand-logo">Ps</div>
+      <a href="index.html" class="brand" aria-label="Back to home">
+        <span class="brand-logo" aria-hidden="true">
+          <svg viewBox="0 0 46 46" width="46" height="46" aria-hidden="true">
+            <defs>
+              <symbol id="ps-logo-shape" viewBox="0 0 1006.1 1376.9">
+                <g transform="matrix(.1 0 0 -.1 -61.743 1488.5)" fill="#000">
+                  <path
+                    d="m1193.6 7390.4c-66.011-1.0896-170.82-30.749-222.13-57.051-101.52-51.718-210.25-158.22-264.51-256.52l-28.516-51.133a315.55 315.55 0 0 1-39.98-153.34l-3.0078-2590a315.55 315.55 0 0 1 0-0.1563c-0.99977-1464.7-4.049-2123.4 5.3906-2447.9 4.7198-162.24-0.70678-232.49 42.734-352.44 21.721-59.978 80.166-136.66 114.82-165.94 11.202-9.4627 11.588-9.7345 14.512-12.168 14.23-17.022 53.71-63.325 131.29-103.55 90.082-46.714 166.55-53.546 252.38-59.59 128.76-9.0658 312.67-9.692 648.44-9.4336 111.92 0.086 240.72 0.2735 389.96 0.2735 149.35 0 278.73-0.096 391.17-0.098 393.56-0.01 567.54-2.1559 709.16 15.684 70.812 8.9197 154.08 29.411 225.61 76.465 70.785 46.568 94.06 81.99 101.93 90.117-0.4631-0.4606-0.942-0.9097-1.4063-1.3672l1.5625 1.543c111.45 110.98 188.88 311.36 178.85 466.5-14.262 222.33-161.61 424.75-358.44 516.6a315.55 315.55 0 0 1-2.4023 1.1133c-13.456 6.1431-80.438 30.694-127.21 37.441-46.769 6.7476-86.086 8.0947-149.41 9.707-126.66 3.2246-347.83 3.8516-791.33 5.3516a315.55 315.55 0 0 0-0.019 0l-578.54 1.9336v2084.5c0 1189 0.01 1788.3-2.5195 2100.9-1.2633 156.34-2.8431 239.38-6.4844 299.8-3.6369 60.354-23.722 143.45-31.289 163.57-79.879 212.05-318.54 378.87-542.27 387.91-18.373 0.8604-36.854 1.5463-58.359 1.1914z" />
+                  <path
+                    d="m1283.1 13084c-53.914 1.059-109.65-2.677-177.21-24.786a315.55 315.55 0 0 1-0.7032-0.214c-174.2-57.468-328.56-191.93-396.74-369.61a315.55 315.55 0 0 1-0.0586-0.176c-10.966-28.634-26.779-97.724-30.547-147.73-3.768-50.009-5.2845-110.15-6.5625-215.55-2.556-210.79-2.7734-598-2.7734-1348.6v-1550a315.55 315.55 0 0 1 30.254-134.82l26.016-55c100.03-211.83 311.05-356.76 546.23-360.18 65.38-0.948 132.02 9.1363 196 30.43 197.62 64.327 289.32 155.8 370.84 337.25v0.019l23.613 52.148a315.55 315.55 0 0 1 28.105 130.16v1550c0 750.57-0.2174 1137.8-2.7734 1348.6-1.278 105.4-2.7945 165.54-6.5625 215.55-3.7612 49.92-19.524 118.83-30.488 147.56-61.331 160.8-149.56 255.3-300.72 331.07-93.664 47.425-176.44 62.127-265.92 63.887z" />
+                  <path
+                    d="m5597.6 12803c-70.638-2.219-140.15-7.24-207.85-15.547-546.93-66.413-1059.4-311.28-1449.4-696.58-210.66-207.39-365.43-423.58-493.95-687.21-111.3-227.11-178.22-437.48-228.52-704.96-33.091-175.29-23.47-357.94-25.469-3738.1-1.9998-2007.8-4.8769-2915.3 3.1836-3345.7 4.0302-215.2 0.818-295.62 31.406-412.6 15.294-58.489 71.933-154.81 119.12-195.27 14.171-12.152 20.173-17.471 21.973-19.082 107.82-103.76 279.11-176.58 423.4-178.14a315.55 315.55 0 0 1 3.4375-0.02c222.19 0 457.62 149.84 551.7 350.64l0.02 0.039 23.75 50.469a315.55 315.55 0 0 1 30.058 134.38v4829.9c62.278-39.235 127.19-75.982 196.33-111.05 218.52-111.52 450.29-186.13 708.46-231.56a315.55 315.55 0 0 1 1.2109-0.2148c246.22-42.344 573.02-40.247 819.75 4.4726a315.55 315.55 0 0 1 0.8008 0.1563c542.41 99.74 1013.5 351.92 1390.9 746.15a315.55 315.55 0 0 1 0.1172 0.098c373.08 390.14 603.26 879.23 670.08 1418.3a315.55 315.55 0 0 1 0.1367 1.094c21.617 179.58 21.24 425.69 0.078 604.75a315.55 315.55 0 0 1-0.1367 1.074c-88.966 731.12-492.06 1378.3-1110.7 1785.5a315.55 315.55 0 0 1-0.1953 0.137c-247.76 162.78-557.09 296.35-839.84 355.18h-0.059c-205.1 42.76-427.48 60.534-639.73 53.867zm89.531-1209.4c84.54 0.983 172.88-4.512 209.69-10.195a315.55 315.55 0 0 1 0.2343-0.04c535.89-82.32 951.46-476.41 1070.4-1029.5a315.55 315.55 0 0 1 0.2929-1.387c10.822-49.22 13.316-419.23 4.1992-463.24a315.55 315.55 0 0 1-0.4101-2.031c-110.84-553.36-520.2-956.06-1046.7-1046a315.55 315.55 0 0 1-1.4648-0.2539c-45.307-7.9546-163.8-16.427-261.48-15.391-58.614 0.622-113.6 4.494-139 8.0664a315.55 315.55 0 0 1-0.332 0.059c-476.43 66.478-907.23 430-1055.1 892.52l-0.019 0.039c-55.437 173.82-52.012 156.19-52.012 383.94 0 229.66 0.5631 237.81 64.082 418.24a315.55 315.55 0 0 1 0.5859 1.68c147.83 427.68 550 769.97 996.35 848.32a315.55 315.55 0 0 1 0.2929 0.04c37.464 6.612 125.78 14.095 210.33 15.078z" />
+                  <path
+                    d="m5869 14869c-52.614 0.132-101.19-0.421-143.14-1.933-20.979-0.756-40.06-1.684-60.02-3.36-19.96-1.675-28.466 2.388-88.789-15.546a315.55 315.55 0 0 1-2.5586-0.782c-272.25-83.463-464.09-339.04-440-632.48a315.55 315.55 0 0 1 0.039-0.391c18.303-219.64 138.12-391.48 329.28-491.41a315.55 315.55 0 0 1 5.0586-2.578c41.752-20.876 124.96-44.724 187.03-51.465 61.967-6.73 132.93-9.995 258.65-15.527h0.059c146.75-6.716 340.44-21.02 392.11-27.129 844.17-101.29 1560.4-447.1 2142.1-1028.7 527.27-528.24 825.65-1105.3 940.78-1813.6a315.55 315.55 0 0 1 0.1563-1.016c33.033-199.14 41.738-311.11 41.738-515.35 0-595.95-142.44-1141-426.89-1642.3a315.55 315.55 0 0 1-0.059-0.098c-435.31-767.66-1260.6-1393.2-2124.2-1609.6a315.55 315.55 0 0 1-0.059 0c-324.2-81.288-470.74-98.56-864.04-99.531a315.55 315.55 0 0 1-0.996 0c-178.07-1.0032-268.92 2.8895-380.98-17.461s-240.12-111.29-283.91-154.51a315.55 315.55 0 0 1-2.3632-2.3633c-234.45-236.4-219.61-652.05 27.07-873.79 48.863-43.934 180.57-130.1 297.91-148.85 88.061-14.073 169.77-15.507 293.93-15.352 41.385 0.052 87.492 0.2735 140.12 0.2735 391.62 0 509.01 9.454 812.91 66.367 759.29 141.51 1491.2 491.07 2112.9 1004.8 174.16 143.53 431.55 400.26 575.14 571.84 591.06 709.27 932.14 1515.4 1034.2 2437.3 27.389 254.71 25.16 733.22-5.468 986.6-56.92 453.25-158.92 847.54-320.78 1227.4-431.78 1009.3-1248.8 1856-2264.8 2356-585.51 288.48-1206.3 455.94-1862.4 501.66-95.076 6.262-213.48 9.17-318.71 9.433z" />
+                </g>
+              </symbol>
+              <mask id="logo-cutout" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse">
+                <rect x="0" y="0" width="46" height="46" fill="#fff" />
+                <svg x="5" y="5" width="36" height="36" viewBox="0 0 1006.1 1376.9" preserveAspectRatio="xMidYMid meet">
+                  <use href="#ps-logo-shape" fill="#000" />
+                </svg>
+              </mask>
+            </defs>
+
+            <rect x="0" y="0" width="46" height="46" rx="10" ry="10" fill="var(--light)" mask="url(#logo-cutout)" />
+            <rect x="0.5" y="0.5" width="45" height="45" rx="9.5" ry="9.5" fill="none" stroke="var(--border)" />
+          </svg>
+        </span>
         Phantomsong
-      </div>
+      </a>
 
       <nav class="nav-links" aria-label="Primary">
         <a href="#services">Services</a>
@@ -417,7 +56,7 @@
       </nav>
 
       <div class="nav-cta">
-        <a class="btn btn-ghost" href="#work">View work</a>
+        <a class="btn btn-ghost" href="./market/index.html">Market</a>
         <a class="btn btn-primary" href="#contact">Book Free</a>
       </div>
 
@@ -428,32 +67,38 @@
       <a href="#work">Portfolio</a>
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
-      <a class="btn btn-primary" href="#contact">Book Free</a>
+      <div class="menu-actions">
+        <a class="btn btn-ghost" href="./market/index.html">Market</a>
+        <a class="btn btn-primary" href="#contact">Book</a>
+      </div>
     </div>
   </header>
 
   <!-- ===== Hero ===== -->
-  <section class="hero">
+  <section class="section hero" id="hero">
     <div class="container hero-wrap">
       <div class="copy">
-        <span class="kicker tag">Creative Studio</span>
+        <div class="section-header">
+          <span class="kicker tag">Creative Studio</span>
+        </div>
         <h1>We build brands &amp; websites that tell your story clearly. We don’t just create. We connect.</h1>
-        <p>From visual identity to fully-responsive websites and product visuals, we help small teams look enterprise-level without the enterprise price tag.</p>
+        <p>From visual identity to fully-responsive websites and product visuals, we help small teams look
+          enterprise-level without the enterprise price tag.</p>
         <div class="actions">
           <a href="#contact" class="btn btn-primary">Free 15-minute consultation ↗</a>
           <a href="#work" class="btn btn-ghost">See recent projects</a>
         </div>
       </div>
       <div class="media" aria-hidden="true">
-        <img src="Code.png" alt="" loading="lazy" decoding="async">
+        <img src="./SRC/Code.png" alt="" loading="lazy" decoding="async">
       </div>
     </div>
   </section>
 
-  <!-- ===== Experience / Trust bar ===== -->
+  <!-- ===== Experience ===== -->
   <section class="section" id="experience">
     <div class="container">
-      <div class="section-head">
+      <div class="section-header">
         <div>
           <span class="tag">Experience</span>
           <h2>Companies we've worked for.</h2>
@@ -463,7 +108,8 @@
     </div>
   </section>
 
-  <section class="section" aria-label="Trusted by">
+  <!-- ===== Trusted by ===== -->
+  <section class="section trusted-by" aria-label="Trusted by">
     <div class="container trust">
       <img src="https://i.imgur.com/TEyAHP0.png" alt="CodeCrew" loading="lazy" decoding="async">
       <img src="https://i.imgur.com/edpmW0L.png" alt="MoSH" loading="lazy" decoding="async">
@@ -475,7 +121,7 @@
   <!-- ===== Services ===== -->
   <section class="section services" id="services">
     <div class="container">
-      <div class="section-head">
+      <div class="section-header">
         <div>
           <span class="tag">What we do</span>
           <h2>Design that moves people... and metrics.</h2>
@@ -484,7 +130,7 @@
         <a href="#contact" class="btn btn-ghost">Get a quote</a>
       </div>
 
-      <div class="grid" style="margin-top:24px;">
+      <div class="grid">
         <article class="card">
           <span class="tag">Web</span>
           <h3>Responsive Websites</h3>
@@ -504,17 +150,13 @@
     </div>
   </section>
 
-  <!-- ===== Work (Portfolio) ===== -->
-  <section class="section" id="work" aria-label="Featured work">
+  <!-- ===== Portfolio ===== -->
+  <section class="section work" id="work" aria-label="Featured work">
     <div id="portfolio">
+      <!-- Web Design grid -->
       <div class="wrap">
-        <!-- Portfolio header with tag (restored) -->
-        <div class="section-head">
-          <div>
-            <span class="tag">Portfolio</span>
-            <h2>Selected work</h2>
-          </div>
-          <a href="#contact" class="btn btn-ghost">Start your project</a>
+        <div class="section-header">
+          <span class="tag">Portfolio</span>
         </div>
 
         <h1>Web Design</h1>
@@ -530,13 +172,14 @@
             <button id="closePreview" class="close-btn" title="Close">✕</button>
           </div>
           <div class="frame-wrap">
-            <iframe id="demoFrame" class="demo" sandbox="allow-scripts allow-forms allow-pointer-lock allow-same-origin allow-popups"></iframe>
+            <iframe id="demoFrame" class="demo"
+              sandbox="allow-scripts allow-forms allow-pointer-lock allow-same-origin allow-popups"></iframe>
           </div>
         </div>
       </div>
 
-      <!-- Logo Design Section -->
-      <div class="wrap" style="margin-top:18px;">
+      <!-- Logo Design carousel -->
+      <div class="wrap">
         <h1>Logo Design</h1>
         <p class="lead">Click any logo to see its design process!</p>
 
@@ -565,38 +208,59 @@
     </div>
   </section>
 
+  <!-- ===== Market Promo ===== -->
+  <section class="section market-promo" id="market-promo">
+    <div class="container">
+      <a href="./market/index.html" class="market-promo__banner" aria-label="Go to our market page">
+        <span class="market-promo__text">
+          See us at a market? Click here to be transferred to our market page!
+        </span>
+      </a>
+    </div>
+  </section>
+
   <!-- ===== Testimonials ===== -->
   <section class="section testimonials" id="testimonials" aria-label="Testimonials">
     <div class="container">
-      <span class="tag">Nice things people say</span>
-      <div class="grid" style="margin-top:18px;">
+      <div class="section-header">
+        <div>
+          <span class="tag">Nice things people say</span>
+        </div>
+      </div>
+
+      <div class="grid">
         <blockquote class="quote">
-            <p>“I sell bead bracelets at kids’ vendor fairs. Phantomsong made me a real website, and now parents and organizers take me seriously. I look more professional than the other kids and I’m selling out faster.”</p>
+          <p>“I sell handmade trinkets at kids’ vendor fairs. Phantomsong made me a real website, and now parents and
+            organizers take me seriously. I look more professional than all the other kids and I’m selling out much
+            faster!”</p>
           <div class="meta">
             <span class="avatar">
-              <img src="https://i.imgur.com/hHMhJdt.png" alt="Portrait of Jordan R." style="width:100%;height:100%;object-fit:cover;" loading="lazy" decoding="async">
+              <img src="https://i.imgur.com/hHMhJdt.png" alt="Portrait of Jordan R." loading="lazy" decoding="async">
             </span>
             <span>Samantha P. — Voidbox</span>
           </div>
         </blockquote>
 
         <blockquote class="quote">
-          <p>“I was stuck on Redbubble where everything felt generic. Phantomsong moved me to my own site and built it around me, my colors, my personality, my style. Customers land on it and say, ‘This is so you,’ and know they’re in my shop, not a dime-a-dozen marketplace.”</p>
+          <p>“I used to be stuck with a generic Redbubble shop. Now I have my own site built around me: my colors, my
+            personality, my style. When customers land on it, they know they’re in my shop, not a dime-a-dozen online
+            retailer.”</p>
           <div class="meta">
             <span class="avatar">
-              <img src="https://i.imgur.com/Yng6d3Z.png" alt="Portrait of Priya M." style="width:100%;height:100%;object-fit:cover;" loading="lazy" decoding="async">
+              <img src="https://i.imgur.com/Yng6d3Z.png" alt="Portrait of Priya M." loading="lazy" decoding="async">
             </span>
             <span>Nicole K. — NK. Art</span>
           </div>
         </blockquote>
 
         <blockquote class="quote">
-          <p>“Phantomsong turned my CV into a clean resume site: experience, skills, and a gallery in one link. It prints perfectly and looks like me.”</p>
+          <p>“Phantomsong turned my CV into a clean resume site, my experience and skills plus a gallery in one link. It
+            prints perfectly and looks like me.”</p>
           <div class="meta">
             <span class="avatar">
-              <img src="https://picsum.photos/80?random=33" alt="Portrait of Leo V." style="width:100%;height:100%;object-fit:cover;" loading="lazy" decoding="async">
+              <img src="https://picsum.photos/80?random=33" alt="Portrait of Leo V." loading="lazy" decoding="async">
             </span>
-            <span>Blah B. — Blah Foods</span>
+            <span>Amaya C. — Calder's Kitchen</span>
           </div>
         </blockquote>
       </div>
@@ -608,10 +272,11 @@
     <div class="container wrap">
       <div>
         <h2>Let’s build something people love.</h2>
-        <p>Tell us about your idea and we’ll propose a simple plan, timeline, and flat rate.</p>
+        <p>Tell us about your idea and we’ll propose a simple plan, timeline, and price.</p>
       </div>
       <div class="actions">
-        <button type="button" class="btn btn-primary" id="openConsult" aria-haspopup="dialog" aria-controls="consultModal">
+        <button type="button" class="btn btn-primary" id="openConsult" aria-haspopup="dialog"
+          aria-controls="consultModal">
           Free 15 minute consultation
         </button>
 
@@ -622,14 +287,19 @@
     </div>
   </section>
 
-  <!-- ===== Consultation Modal (overlay) ===== -->
+
+  <!-- ===== Consultation Modal ===== -->
   <div class="consult-modal" id="consultModal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="consult-card" role="document">
       <div class="consult-head">
         <h3 class="consult-title">Request a free 15-minute consultation</h3>
         <button class="consult-close" id="consultClose" aria-label="Close">✕</button>
       </div>
-      <form id="consultForm" class="consult-body" novalidate>
+      <form id="consultForm" class="consult-body" action="https://formspree.io/f/xjkaedvg" method="POST" novalidate>
+        <input type="hidden" name="_subject" value="Consultation request">
+        <input type="hidden" name="_redirect" value="https://phantomsong.design/thanks">
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none">
+
         <div class="consult-grid cols-2">
           <div class="form-field">
             <label for="name">Your name *</label>
@@ -661,7 +331,7 @@
             </select>
             <small>Need multiple services? List them in the box below.</small>
           </div>
-          <div class="form-field" id="otherServiceField" style="display:none;">
+          <div class="form-field" id="otherServiceField">
             <label for="otherService">Other service</label>
             <input id="otherService" name="otherService" type="text" placeholder="Describe the service">
           </div>
@@ -678,7 +348,8 @@
           <label class="check">
             <input id="confirm" name="confirm" type="checkbox" required>
             <span>
-              I understand the free consultation is <strong>15 minutes</strong>. If I want more time, I can book a follow-up for <strong>$60</strong> with an additional <strong>$22/hr</strong>.
+              I understand the free consultation is <strong>15 minutes</strong>. If I want more time, I can book a
+              follow-up for <strong>$60</strong> with an additional <strong>$22/hr</strong>.
             </span>
           </label>
         </div>
@@ -692,24 +363,45 @@
   </div>
 
   <!-- ===== Footer ===== -->
-  <footer class="footer" id="about">
+  <footer class="footer" id="about" role="contentinfo">
     <div class="container grid">
-      <div>
-        <div class="brand" style="margin-bottom:6px;">
-          <div class="brand-logo">Ps</div> Phantomsong
+      <div class="footer-col footer-brand">
+        <div class="brand">
+          <span class="brand-logo" aria-hidden="true">
+            <svg viewBox="0 0 46 46" width="46" height="46" aria-hidden="true">
+
+              <rect x="0" y="0" width="46" height="46" rx="10" ry="10" fill="var(--light)" mask="url(#logo-cutout)" />
+              <rect x="0.5" y="0.5" width="45" height="45" rx="9.5" ry="9.5" fill="none" stroke="var(--border)" />
+            </svg>
+          </span>
+          Phantomsong
         </div>
-        <div style="color:var(--muted)">Millington, Tennessee</div>
+        <div>Millington, Tennessee</div>
       </div>
-      <div>
-        <strong>Navigate</strong><br>
-        <a href="#work">Portfolio</a> · <a href="#services">Services</a> · <a href="#testimonials">Testimonials</a> · <a href="#about">About</a>
+
+      <!-- Navigate -->
+      <div class="footer-col">
+        <div class="section-header">
+          <strong>Navigate</strong>
+        </div>
+        <nav aria-label="Footer navigation">
+          <a href="#work">Portfolio</a>
+          <a href="#services">Services</a>
+          <a href="#testimonials">Testimonials</a>
+          <a href="#about">About</a>
+        </nav>
       </div>
-      <div>
-        <strong>Contact</strong><br>
+
+      <!-- Contact -->
+      <div class="footer-col">
+        <div class="section-header">
+          <strong>Contact</strong>
+        </div>
         <a href="mailto:contact@phantomsong.net">contact@phantomsong.net</a>
       </div>
     </div>
   </footer>
+
 
   <script>
     /* Mobile menu toggle */
@@ -739,9 +431,9 @@
     /* === Portfolio: Web grid === */
     (() => {
       const sites = [
-  { title: "Voidbox", url: "https://mollyap.github.io/voidbox/" },
-  { title: "NKArt", url: "https://mollyap.github.io/NKArt/" },
-  { title: "CalderKitchen", url: "https://mollyap.github.io/calderkitchen/" },
+        { title: "Voidbox", url: "https://mollyap.github.io/voidbox/", thumb: "./SRC/Voidbox.png" },
+        { title: "NKArt", url: "https://mollyap.github.io/NKArt/", thumb: "./SRC/NKArt.png" },
+        { title: "CalderKitchen", url: "https://mollyap.github.io/calderkitchen/", thumb: "./SRC/CalderKitchen.png" },
       ];
 
       const grid = document.getElementById('grid');
@@ -762,7 +454,7 @@
 
         const thumb = document.createElement('div');
         thumb.className = 'thumb';
-        thumb.style.backgroundImage = `url(${s.thumb || `https://image.thum.io/get/width/400/${s.url}`})`;
+        thumb.style.backgroundImage = `url(${s.thumb})`;
 
         const overlay = document.createElement('div');
         overlay.className = 'overlay';
@@ -792,11 +484,11 @@
       preview.addEventListener('click', (ev) => { if (ev.target === preview) closePortfolioPreview(); });
       openTab.addEventListener('click', () => { const u = preview.dataset.currentUrl; window.open(u, '_blank'); });
 
-      // close with ESC (also close logo modal if open)
+      // close with ESC also close logo modal if open
       window.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closePortfolioPreview(); closeLogo(); } });
     })();
 
-    /* === Portfolio: Logo carousel (bigger items + arrows + drag hint) === */
+    /* === Portfolio: Logo carousel === */
     (() => {
       const logos = [
         { title: "Byte Sized Courses", client: "For CodeCrew", icon: "https://i.imgur.com/wm9eTdR.png", images: ["https://i.imgur.com/GCkSiUk.png"] },
@@ -850,7 +542,7 @@
       closeLogoPreview.addEventListener("click", closeLogo);
       logoPreview.addEventListener("click", ev => { if (ev.target === logoPreview) closeLogo(); });
 
-      // Arrow controls (show only if overflow)
+      // Arrow controls
       const prevBtn = document.getElementById('caroPrev');
       const nextBtn = document.getElementById('caroNext');
 
@@ -874,7 +566,19 @@
       setTimeout(updateArrowState, 0);
     })();
 
-    /* === Consultation Modal logic === */
+    /* === Form helpers (Formspree) === */
+    async function postToFormspree(form, extra = {}) {
+      const fd = new FormData(form);
+      for (const [k, v] of Object.entries(extra)) fd.set(k, v);
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: fd,
+        headers: { Accept: 'application/json' }
+      });
+      if (!res.ok) throw new Error('Form submit failed');
+    }
+
+    /* === Consultation Modal === */
     (() => {
       const modal = document.getElementById('consultModal');
       const openBtn = document.getElementById('openConsult');
@@ -888,15 +592,19 @@
 
       function openModal() {
         lastFocused = document.activeElement;
+        document.body.classList.add('modal-open');
         modal.classList.add('open');
         modal.setAttribute('aria-hidden', 'false');
         document.getElementById('name').focus();
       }
+
       function closeModal() {
         modal.classList.remove('open');
         modal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
         if (lastFocused) lastFocused.focus();
       }
+
 
       openBtn.addEventListener('click', openModal);
       closeBtn.addEventListener('click', closeModal);
@@ -910,7 +618,7 @@
         if (!isOther) { otherInput.value = ''; }
       });
 
-      form.addEventListener('submit', (e) => {
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (!form.reportValidity()) return;
 
@@ -922,28 +630,18 @@
           return;
         }
 
-        const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const company = document.getElementById('company').value.trim();
-        const selectedService = service.value === 'Other' ? otherInput.value.trim() : service.value;
-        const brief = document.getElementById('brief').value.trim();
-
-        const subject = `Consultation request: ${name}`;
-        const lines = [
-          `Name: ${name}`,
-          `Email: ${email}`,
-          company ? `Company: ${company}` : null,
-          `Service: ${selectedService}`,
-          brief ? `Brief: ${brief}` : null,
-          `Confirmed 15-min policy: Yes`
-        ].filter(Boolean);
-
-        const body = lines.join('\n');
-        const mailto = `mailto:contact@phantomsong.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        window.location.href = mailto;
-        closeModal();
+        const subject = `Consultation: ${document.getElementById('name').value.trim() || 'Request'}`;
+        try {
+          await postToFormspree(form, { _subject: subject });
+          window.location.href = 'https://phantomsong.design/thanks';
+          form.reset();
+          closeModal();
+        } catch (err) {
+          alert('Sorry—there was a problem submitting. Please try again.');
+        }
       });
     })();
   </script>
 </body>
+
 </html>

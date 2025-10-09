@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Thanks — Phantomsong</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap"
+        rel="stylesheet">
+    <link href="../styles.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <section class="thankyou">
+        <div class="ty-glow" aria-hidden="true"></div>
+        <div class="ty-noise" aria-hidden="true"></div>
+        <div class="ty-sparks" id="tySparks" aria-hidden="true"></div>
+
+        <div class="ty-wrap">
+            <h1 class="ty-title">THANKS!</h1>
+            <p class="ty-sub">We got your submission. We’ll get back to you shortly.</p>
+            <div class="ty-actions">
+                <a class="btn btn-ghost" href="../index.html">← Back to Home</a>
+                <a class="btn btn-primary" href="../market/index.html">Visit Market</a>
+            </div>
+            <p class="ty-note">Want to keep exploring? Check out our latest work and upcoming markets.</p>
+        </div>
+    </section>
+
+    <script>
+        (() => {
+            const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (reduce) return;
+
+            const layer = document.getElementById('tySparks');
+            if (!layer) return;
+
+            const COUNT = 40;
+            const BASE_SPEED = 0.25;
+            const MAX_SPEED = 0.85;
+            const DRIFT = 0.08;
+            const REPULSE_RADIUS = 120;
+            const REPULSE_STRENGTH = 2.2;
+
+            const W = () => innerWidth;
+            const H = () => innerHeight;
+
+            const mouse = { x: -9999, y: -9999 };
+            addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+            addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
+
+            const parts = [];
+            function spawn(i) {
+                const el = document.createElement('span');
+                el.className = 'ty-spark';
+                const size = 4 + Math.random() * 7;
+                el.style.width = size + 'px';
+                el.style.height = size + 'px';
+                el.style.opacity = (0.65 + Math.random() * 0.35).toFixed(2);
+                layer.appendChild(el);
+                parts[i] = {
+                    el,
+                    x: Math.random() * W(),
+                    y: Math.random() * H(),
+                    ang: Math.random() * Math.PI * 2,
+                    speed: BASE_SPEED + Math.random() * (MAX_SPEED - BASE_SPEED),
+                    wiggle: DRIFT * (0.6 + Math.random() * 0.8)
+                };
+            }
+            for (let i = 0; i < COUNT; i++) spawn(i);
+
+            let raf;
+            (function tick() {
+                const w = W(), h = H();
+                for (const p of parts) {
+                    p.ang += (Math.random() - 0.5) * p.wiggle;
+                    let vx = Math.cos(p.ang) * p.speed;
+                    let vy = Math.sin(p.ang) * p.speed;
+
+                    const dx = p.x - mouse.x, dy = p.y - mouse.y;
+                    const d2 = dx * dx + dy * dy, R2 = REPULSE_RADIUS * REPULSE_RADIUS;
+                    if (d2 < R2) {
+                        const d = Math.max(Math.sqrt(d2), .01);
+                        const f = (REPULSE_RADIUS - d) / REPULSE_RADIUS * REPULSE_STRENGTH;
+                        vx += (dx / d) * f; vy += (dy / d) * f;
+                        p.el.style.filter = 'brightness(1.6)';
+                    } else {
+                        p.el.style.filter = '';
+                    }
+
+                    p.x += vx; p.y += vy;
+
+                    if (p.x < -20) p.x = w + 20;
+                    if (p.x > w + 20) p.x = -20;
+                    if (p.y < -20) p.y = h + 20;
+                    if (p.y > h + 20) p.y = -20;
+
+                    p.el.style.transform = `translate(${Math.round(p.x)}px, ${Math.round(p.y)}px)`;
+                }
+                raf = requestAnimationFrame(tick);
+            })();
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) cancelAnimationFrame(raf);
+                else raf = requestAnimationFrame(() => { });
+            });
+        })();
+    </script>
+</body>
+
+</html>
